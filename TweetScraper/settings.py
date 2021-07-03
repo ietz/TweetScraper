@@ -8,12 +8,11 @@ LOG_LEVEL = 'INFO'
 SPIDER_MODULES = ['TweetScraper.spiders']
 NEWSPIDER_MODULE = 'TweetScraper.spiders'
 ITEM_PIPELINES = {
-    'TweetScraper.pipelines.SaveToFilePipeline':100,
+    'TweetScraper.pipelines.MultiJsonLinesPipeline': 100,
 }
 
 # settings for where to save data on disk
-SAVE_TWEET_PATH = './Data/tweet/'
-SAVE_USER_PATH = './Data/user/'
+OUTPUT_DIR = './Data/'
 
 DOWNLOAD_DELAY = 1.0
 

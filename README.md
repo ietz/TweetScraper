@@ -36,6 +36,16 @@ The crawled data is not as *clean* as the one obtained by the APIs, but the bene
 3. The tweets will be saved to disk in `./Data/tweet/` in default settings and `./Data/user/` is for user data. The file format is JSON. Change the `SAVE_TWEET_PATH` and `SAVE_USER_PATH` in `TweetScraper/settings.py` if you want another location.
 
 
+# In Docker
+1. Build the docker image
+   ```
+   docker build -t tweetscraper .
+   ```
+2. Run the crawler, mounting a local directory to save the output to
+   ```
+   docker run -v <LOCAL_DIR>:/root/TweetScraper/Data --rm -it tweetscraper scrapy crawl TweetScraper -s USER_AGENT="<YOUR_USERAGENT>" -a query="@BarackObama"
+   ```
+
 # Acknowledgement #
 Keeping the crawler up to date requires continuous efforts, please support our work via [opencollective.com/tweetscraper](https://opencollective.com/tweetscraper).
 

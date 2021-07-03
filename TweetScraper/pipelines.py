@@ -1,7 +1,9 @@
+from collections import defaultdict
 from pathlib import Path
 from typing import List, Dict, Type, BinaryIO
 
 from scrapy.crawler import Crawler
+from scrapy.exceptions import DropItem
 from scrapy.exporters import JsonLinesItemExporter
 from scrapy import signals
 from scrapy.signalmanager import SignalManager
@@ -25,6 +27,7 @@ class MultiJsonLinesPipeline:
         signal_manager.connect(self.spider_closed, signals.spider_closed)
         self.files: List[BinaryIO] = []
         self.type_exporters: Dict[Type, JsonLinesItemExporter] = {}
+        self.known_ids = defaultdict(set)
 
     @classmethod
     def from_crawler(cls, crawler: Crawler):
@@ -49,6 +52,13 @@ class MultiJsonLinesPipeline:
             file.close()
 
     def process_item(self, item, spider):
-        if type(item) in self.type_exporters:
-            self.type_exporters[type(item)].export_item(item)
+        t = type(item)
+
+        if t in self.type_exporters:
+            id_ = item['id_']
+            if id_ in self.known_ids[t]:
+                raise DropItem(f'Duplicate item with id {id_}')
+
+            self.known_ids[t].add(id_)
+            self.type_exporters[t].export_item(item)
         return item

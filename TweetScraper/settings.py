@@ -4,6 +4,7 @@ USER_AGENT = 'TweetScraper'
 # settings for spiders
 BOT_NAME = 'TweetScraper'
 LOG_LEVEL = 'INFO'
+LOG_FORMATTER = 'TweetScraper.logformatters.PoliteLogFormatter'
 
 SPIDER_MODULES = ['TweetScraper.spiders']
 NEWSPIDER_MODULE = 'TweetScraper.spiders'

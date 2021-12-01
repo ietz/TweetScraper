@@ -18,8 +18,8 @@ OUTPUT_DIR = Path(SETTINGS['OUTPUT_DIR'])
 
 class MultiJsonLinesPipeline:
     item_type_file_paths = {
-        Tweet: OUTPUT_DIR / 'tweets.csv',
-        User: OUTPUT_DIR / 'users.csv',
+        Tweet: OUTPUT_DIR / 'tweets.jsonl',
+        User: OUTPUT_DIR / 'users.jsonl',
     }
 
     def __init__(self, signal_manager: SignalManager):

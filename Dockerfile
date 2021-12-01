@@ -1,7 +1,5 @@
 FROM python:3.7-slim
 
-COPY . /root/TweetScraper/
-
 RUN apt-get update \
  && apt-get install -y wget firefox-esr \
  && rm -rf /var/lib/apt/lists/* \
@@ -10,8 +8,11 @@ RUN apt-get update \
  && rm geckodriver-v0.29.1-linux64.tar.gz \
  && chmod +x geckodriver \
  && mv geckodriver /usr/local/bin/ \
- && cd /root/TweetScraper \
- && pip install -r requirements.txt \
  && apt remove -y wget
 
 WORKDIR /root/TweetScraper/
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .

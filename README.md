@@ -4,47 +4,19 @@ It is built on [Scrapy](http://scrapy.org/) without using [Twitter's APIs](https
 The crawled data is not as *clean* as the one obtained by the APIs, but the benefits are you can get rid of the API's rate limits and restrictions. Ideally, you can get all the data from Twitter Search.
 
 **WARNING:** please be polite and follow the [crawler's politeness policy](https://en.wikipedia.org/wiki/Web_crawler#Politeness_policy).
- 
-
-# Installation #
-1. Install `conda`, you can get it from [miniconda](https://docs.conda.io/en/latest/miniconda.html). The tested python version is `3.7`. 
-
-2. Install selenium python bindings: https://selenium-python.readthedocs.io/installation.html. (Note: the `KeyError: 'driver'` is caused by wrong setup)
-
-3. For ubuntu or debian user, run:
-    
-    ```
-    $ bash install.sh
-    $ conda activate tweetscraper
-    $ scrapy list
-    $ #If the output is 'TweetScraper', then you are ready to go.
-    ```
-
-    the `install.sh` will create a new environment `tweetscraper` and install all the dependencies (e.g., `firefox-geckodriver` and `firefox`),
 
 # Usage #
-1. Change the `USER_AGENT` in `TweetScraper/settings.py` to identify who you are
-	
-		USER_AGENT = 'your website/e-mail'
-
-2. In the root folder of this project, run command like: 
-
-		scrapy crawl TweetScraper -a query="foo,#bar"
-
-	where `query` is a list of keywords seperated by comma and quoted by `"`. The query can be any thing (keyword, hashtag, etc.) you want to search in [Twitter Search](https://twitter.com/search-home). `TweetScraper` will crawl the search results of the query and save the tweet content and user information. 
-
-3. The tweets will be saved to disk in `./Data/tweet/` in default settings and `./Data/user/` is for user data. The file format is JSON. Change the `SAVE_TWEET_PATH` and `SAVE_USER_PATH` in `TweetScraper/settings.py` if you want another location.
-
-
-# In Docker
-1. Build the docker image
-   ```
-   docker build -t tweetscraper .
-   ```
-2. Run the crawler, mounting a local directory to save the output to
-   ```
-   docker run -v <LOCAL_DIR>:/root/TweetScraper/Data --rm -it tweetscraper scrapy crawl TweetScraper -s USER_AGENT="<YOUR_USERAGENT>" -a query="@BarackObama"
-   ```
+The recommended way to use the scraper is via the official [ietz/tweet-scraper](https://hub.docker.com/r/ietz/tweet-scraper) docker image.
+By using a docker image, you don't have to install the required dependencies such as Firefox or the selenium drivers.
+Call the image with
+```shell
+docker run -it --rm \
+  -v <OUTPUT_DIR>:/root/TweetScraper/Data \
+  scrapy crawl TweetScraper -s USER_AGENT="Your Name <yourmail@example.com>" -a query="@BarackObama"
+```
+The query will be used as input for the twitter search, and can use any [twitter advanced search field](https://twitter.com/search-advanced).
+The scraper will create a `tweets.jsonl` and a `users.jsonl` in the `<OUTPUT_DIR>`.
+Both files are in [jsonlines](https://jsonlines.org/) format, containing one JSON object per line.
 
 # Acknowledgement #
 Keeping the crawler up to date requires continuous efforts, please support our work via [opencollective.com/tweetscraper](https://opencollective.com/tweetscraper).
